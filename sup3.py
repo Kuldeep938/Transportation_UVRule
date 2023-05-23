@@ -6,7 +6,7 @@ app = Flask(__name__, template_folder='template')
 app.secret_key = 'your_secret_key'  # replace 'your_secret_key' with a real secret key
 
 @app.route('/', methods=['GET', 'POST'])
-def supvdem():
+def index():
     default_suppliers = 3
     default_demands = 4
     default_matrix = [[4.0, 3.0, 2.0, 4.0], [2.0, 3.0, 2.0, 3.0], [1.0, 1.0, 2.0, 2.0]]
@@ -41,11 +41,11 @@ def supvdem():
                 session['idx'] = 0
             except ValueError:
                 flash('Invalid input. Please check all fields.')
-                return redirect(url_for('supvdem'))
+                return redirect(url_for('index'))
 
             return redirect(url_for('costmatrix'))
 
-    return render_template('supvdem.html', 
+    return render_template('index.html', 
                            suppliers=session.get('suppliers'),
                            demands=session.get('demands'),
                            matrix="\n".join([" ".join(map(str, row)) for row in session.get('matrix', [])]),
