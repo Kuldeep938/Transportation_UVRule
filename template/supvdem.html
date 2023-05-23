@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cost Matrix Input</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+</head>
+
+
+<body>
+    <div class="container">
+        <h1>Transportation Problem</h1>
+        <!-- <div class="pic">
+           <img src="/static/Picsart_23-05-23_20-47-00-088.jpg" alt="">
+        </div> -->
+        <div class="form">
+            <form method="POST">
+                <h2>Cost Matrix Input</h1>
+                    <div class="info">
+                        <div class="supplies">
+                            <label for="suppliers">Number of suppliers(Rows) :</label>
+                            <input type="number" id="suppliers" name="suppliers" value="{{ suppliers }}"
+                                placeholder=""><br>
+                        </div>
+                        <div class="demands">
+                            <label for="demands">Number of demands(Coloumns) :</label>
+                            <input type="number" id="demands" name="demands" value="{{ demands }}" placeholder=""><br>
+                        </div>
+                    </div>
+                    <div class="count">
+                        <div class="matrix">
+                            <label for="matrix">Cost Matrix data (use space as separator):</label><br>
+                            <textarea id="matrix" name="matrix" rows="10" cols="50"
+                                placeholder="">{{ matrix }}</textarea><br>
+                        </div>
+                        <div class="supply">
+                            <label for="supply">Supply data (use space as separator):</label><br>
+                            <textarea id="supply" name="supply" rows="10" cols="50"
+                                placeholder="">{{ supply }}</textarea><br>
+                        </div>
+                        <div class="demand">
+                            <label for="demand">Demand data (use space as separator):</label><br>
+                            <textarea id="demand" name="demand" rows="10" cols="50"
+                                placeholder="">{{ demand }}</textarea><br>
+                        </div>
+
+                    </div>
+                    <button class="btn" style="text-align: center;">Submit</button>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transportation Problem</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+    <h1>Transportation Problem</h1>
+    <h2>Cost Matrix</h2>
+
+    <!-- Matrix Table -->
+
+    <table class="container-table">
+        <thead>
+            <tr>
+                <th></th>
+                {% for j in range(demands) %}
+                <th>D{{ j + 1 }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for i in range(suppliers) %}
+            <tr>
+                <th>S{{ i + 1 }}</th>
+                {% for j in range(demands) %}
+                <td>{{ matrix[i][j] }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Total Supply Table -->
+    <h2>Total Supply</h2>
+    <table class="container-table">
+        <thead>
+            <tr>
+                <th>Supplier</th>
+                <th>Total Supply</th>
+            </tr>
+        </thead>
+        {% for i in range(suppliers) %}
+        <tbody>
+            <tr>
+                <td>S{{ i + 1 }}</td>
+                <td>{{ supply[i] }}</td>
+            </tr>
+        </tbody>
+        {% endfor %}
+    </table>
+
+    <!-- Total Demand Table -->
+    <h2>Total Demand</h2>
+    <table class="container-table">
+        <thead>
+            <tr>
+                <th>Demand</th>
+                <th>Total Demand</th>
+            </tr>
+        </thead>
+        {% for j in range(demands) %}
+        <tbody>
+            <tr>
+                <td>D{{ j + 1 }}</td>
+                <td>{{ demand[j] }}</td>
+            </tr>
+        </tbody>
+        {% endfor %}
+    </table>
+
+    <h2>Select a Method</h2>
+    <div class="select">
+        <form action="/costmatrix" method="POST">
+            <div class="opt">
+                <select name="method" required>
+                    <div class="opts">
+
+                        <option value="north-west">North-west Rule</option>
+                        <option value="min-cost">Min-Cost Rule</option>
+                    </div>
+                </select>
+            </div>
+            <button class="btn" style="text-align: center;">Submit</button>
+        </form>
+    </div>
+    <div class="goback">
+        <li>
+            <a href="/">Go back</a>
+        </li>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Transportation Problem</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+    <h1>Transportation Problem</h1>
+    <h2>No.of.Suppliers: {{ suppliers }}</h2>
+    <h2>No.of.outlets:{{ demands }}</h2>
+    <h2>Supply: {{ supply }}</h2>
+    <h2>Demand: {{ demand }}</h2>
+    <h2>Method: {{ method }}</h2>
+
+    {% if solution %}
+    <h2>STATUS:{{ message }}{{idx}}</h2>
+    <h2>Allocation table</h2>
+    <table class="container-table">
+        <thead>
+            <tr>
+                <th></th>
+                {% for j in range(demands) %}
+                <th>Demand {{ j+1 }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for i in range(suppliers) %}
+            <tr>
+                <th>Supplier {{ i+1 }}</th>
+                {% for j in range(demands) %}
+                <td>{{ solution[i][j] }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <h2>Cost Matrix</h2>
+    <table class="container-table">
+        <thead>
+            <tr>
+                <th></th>
+                {% for j in range(demands) %}
+                <th>Demand {{ j+1 }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for i in range(suppliers) %}
+            <tr>
+                <th>Supplier {{ i+1 }}</th>
+                {% for j in range(demands) %}
+                <td>{{ matrix[i][j] }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Cost for the above Allocation is:{{ cost_bfs }}</h2>
+    {% else %}
+    <p>No solution available.</p>
+    {% endif %}
+
+    <br>
+    <div class="front">
+        <form action="/prev" method="POST">
+            <a href="{{ url_for('prev') }}">Previous bfs</a>
+        </form>
+        <form action="/next" method="POST">
+        <a href="{{ url_for('next') }}">Next bfs</a>
+        </form>
+        <form action="/costmatrix" method="POST">
+        <a href="{{ url_for('costmatrix') }}">change method</a>
+        </form>
+    </div>
+
+</body>
+
+</html>
