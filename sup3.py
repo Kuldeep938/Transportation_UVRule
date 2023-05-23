@@ -7,6 +7,23 @@ app.secret_key = 'your_secret_key'  # replace 'your_secret_key' with a real secr
 
 @app.route('/', methods=['GET', 'POST'])
 def supvdem():
+    default_suppliers = 3
+    default_demands = 4
+    default_matrix = [[4.0, 3.0, 2.0, 4.0], [2.0, 3.0, 2.0, 3.0], [1.0, 1.0, 2.0, 2.0]]
+    default_supply = [23.0, 12.0, 9.0]  
+    default_demand = [8.0, 16.0, 13.0, 7.0]     
+
+    # Set default values
+    if 'suppliers' not in session:
+        session['suppliers'] = default_suppliers
+    if 'demands' not in session:
+        session['demands'] = default_demands
+    if 'matrix' not in session:
+        session['matrix'] = default_matrix
+    if 'supply' not in session:
+        session['supply'] = default_supply
+    if 'demand' not in session:
+        session['demand'] = default_demand
     if request.method == 'POST':
         suppliers = request.form.get('suppliers')
         demands = request.form.get('demands')
