@@ -1,6 +1,8 @@
 from flask import Flask, redirect, url_for, render_template, request, session, flash
 import numpy as np
 import copy
+import networkx as nx
+import matplotlib.pyplot as plt
 
 app = Flask(__name__, template_folder='template')
 app.secret_key = 'your_secret_key'  # replace 'your_secret_key' with a real secret key
@@ -24,6 +26,7 @@ def index():
         session['supply'] = default_supply
     if 'demand' not in session:
         session['demand'] = default_demand
+        
     if request.method == 'POST':
         suppliers = request.form.get('suppliers')
         demands = request.form.get('demands')
@@ -138,6 +141,7 @@ def calculate_uv(cost_matrix, bfs, u, v):
                         v[j] = cost_matrix[i][j] - u[i]
                     elif u[i] is None and v[j] is not None:
                         u[i] = cost_matrix[i][j] - v[j]
+    return
 
 
 def calculate_opportunity_costs(cost_matrix, bfs, u, v):
@@ -267,6 +271,69 @@ def calCost(bfs,Cost):
     return sum
 
 
+def network(bfs):
+    supp = []
+    dem = []
+    allocation = []
+    no_of_supp = len(bfs)
+    no_of_dem = len(bfs[0])
+    
+    for i in range(no_of_supp):
+        supp.append(('S'+str(i+1)))
+    for i in range(no_of_dem):
+        dem.append(('D'+str(i+1)))
+    G = nx.DiGraph()
+    G.add_nodes_from(supp)
+    G.add_nodes_from(dem)
+    for i, supplier in enumerate(supp):
+        for j, destination in enumerate(dem):
+            if bfs[i][j] != 0:
+                 G.add_edge(supplier, destination,weight = bfs[i][j])
+    pos = {}
+
+    for i, supplier in enumerate(supp):
+        pos[supplier] = (1, i+1)
+
+    for i, destination in enumerate(dem):
+        pos[destination] = (2, i+1)
+
+    nx.draw_networkx_nodes(G, pos, node_color='skyblue')
+    nx.draw_networkx_labels(G, pos)
+
+    for edge in G.edges:
+        start, end = pos[edge[0]], pos[edge[1]]
+        plt.annotate('', xy=end, xytext=start, arrowprops=dict(facecolor='black', arrowstyle='-'))
+    # Draw edge labels (weights)
+    edge_labels = nx.get_edge_attributes(G, 'weight')
+    for (start_node, end_node), weight in edge_labels.items():
+        x = (pos[start_node][0] + pos[end_node][0]) / 2
+        y = (pos[start_node][1] + pos[end_node][1]) / 2
+        plt.text(x - 0.1, y, weight, horizontalalignment='right', verticalalignment='center')
+    x_sup = 1
+    x_dem = 2
+    y_sup = 1
+    y_dem = 1
+    for i in range(no_of_supp):
+        sum = 0
+        for j in range(no_of_dem):
+            sum += bfs[i][j]
+        plt.text(x_sup+0.04, y_sup+0.15,sum , horizontalalignment='right', verticalalignment='center')
+        y_sup += 1
+    
+    for i in range(no_of_dem):
+        sum = 0
+        for j in range(no_of_supp):
+            sum = sum + bfs[j][i]
+        plt.text(x_dem, y_dem+0.15,sum , horizontalalignment='right', verticalalignment='center')
+        y_dem += 1
+   # nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels)
+    plt.savefig('static/download.png')
+    plt.close()
+    #return
+    #plt.axis('off')
+   # plt.show()
+
+
 @app.route('/resultbfs', methods=['GET', 'POST'])
 def resultbfs():
     method = session.get('method')
@@ -277,11 +344,11 @@ def resultbfs():
     demand = session.get('demand')
 
     if suppliers and demands and matrix and supply and demand and method:
-        if method == "north-west":
+        if method == "North-West":
             solution = northWest(supply, demand)
             bfss = uv_method(matrix, solution)
             session['bfss'] = bfss
-        elif method == "min-cost":
+        elif method == "Minimum-Cost":
             solution = minCost(supply, demand,matrix)
             bfss = uv_method(matrix, solution)
             session['bfss'] = bfss
@@ -295,10 +362,11 @@ def resultbfs():
             message = "Initial Basic Solution is the Optimal Solution"
         else:
             message = "Initial Basic Solution"
+        network(bfss[idx])
         return render_template('resultbfs.html', solution=bfss[idx], suppliers=suppliers, demands=demands, matrix=matrix, supply=supply, demand=demand,method = method,idx = idx , message=message, cost_bfs = cost_bfs)
 
     flash('Some information is missing, please fill in all the fields.')
-    return redirect(url_for('supvdem'))
+    return redirect(url_for('index'))
 @app.route('/next', methods=['GET', 'POST'])
 def next():
     method = session.get('method')
@@ -322,13 +390,16 @@ def next():
         if(idx ==0):
             message = "Inital Basic Feasible Solution"
             cost_bfs = calCost(bfss[idx],matrix)
+            network(bfss[idx])
             return render_template('next.html', solution=bfss[idx], suppliers=suppliers, demands=demands, matrix=matrix, supply=supply, demand=demand,method = method,idx = idx , message = message, cost_bfs = cost_bfs)
         if(idx ==len(bfss)-1):
             message = "Optimal Solution Reached"
             cost_bfs = calCost(bfss[idx],matrix)
+            network(bfss[idx])
             return render_template('next.html', solution=bfss[idx], suppliers=suppliers, demands=demands, matrix=matrix, supply=supply, demand=demand,method = method,idx = idx, message = message, cost_bfs = cost_bfs)
         message = "Basic Feasible Solution"
         cost_bfs = calCost(bfss[idx],matrix)
+        network(bfss[idx])
         return render_template('next.html', solution=bfss[idx], suppliers=suppliers, demands=demands, matrix=matrix, supply=supply, demand=demand,method = method,idx = idx ,message = message, cost_bfs = cost_bfs)
 
 @app.route('/prev', methods=['GET', 'POST'])
@@ -354,15 +425,18 @@ def prev():
         if(idx ==0):
             message = "Inital Basic Feasible Solution"
             cost_bfs = calCost(bfss[idx],matrix)
+            network(bfss[idx])
             return render_template('next.html', solution=bfss[idx], suppliers=suppliers, demands=demands, matrix=matrix, supply=supply, demand=demand,method = method,message = message ,idx = idx, cost_bfs = cost_bfs)
         if(idx ==len(bfss)-1):
             message = "Optimal Solution Reached"
             cost_bfs = calCost(bfss[idx],matrix)
+            network(bfss[idx])
             return render_template('next.html', solution=bfss[idx], suppliers=suppliers, demands=demands, matrix=matrix, supply=supply, demand=demand,method = method,idx = idx,message = message, cost_bfs = cost_bfs)
         message = "Basic Feasible Solution"
         cost_bfs = calCost(bfss[idx],matrix)
+        network(bfss[idx])
         return render_template('prev.html', solution=bfss[idx], suppliers=suppliers, demands=demands, matrix=matrix, supply=supply, demand=demand,method = method,idx = idx,message = message, cost_bfs = cost_bfs)
     flash('Some information is missing, please fill in all the fields.')
-    return redirect(url_for('supvdem'))
+    return redirect(url_for('index'))
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True , threaded=False)
