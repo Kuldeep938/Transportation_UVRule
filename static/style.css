@@ -5,7 +5,7 @@
 body{
     font-family: 'Poppins', sans-serif;
     font-weight: bold;
-    background-color: #f5f5f7;
+    background-color: #ffffff;
 }
 h1{
     font-style: normal;
@@ -180,4 +180,15 @@ option{
     background-color:#888;
     color:white;
     border-radius: 6px;
+}
+.between{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-around;
+}
+.image img{
+    margin-top: 60px;
+    align-self: center;
+
 }
