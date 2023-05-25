@@ -31,23 +31,28 @@
                         </div>
                     </div>
                     <div class="count">
+                        <div class="supply">
+                            <label for="supply">Supply data (use space as separator):</label><br>
+                            <textarea id="supply" name="supply" rows="2" cols="50"
+                                placeholder="">{{ supply }}</textarea><br>
+                        </div>
+                        </div>  
+                        <div class="count">
+                        <div class="demand">
+                            <label for="demand">Demand data (use space as separator):</label><br>
+                            <textarea id="demand" name="demand" rows="2" cols="50"
+                                placeholder="">{{ demand }}</textarea><br>
+                        </div>
+                    </div>
+                    <div class="count">
                         <div class="matrix">
                             <label for="matrix">Cost Matrix data (use space as separator):</label><br>
                             <textarea id="matrix" name="matrix" rows="10" cols="50"
                                 placeholder="">{{ matrix }}</textarea><br>
                         </div>
-                        <div class="supply">
-                            <label for="supply">Supply data (use space as separator):</label><br>
-                            <textarea id="supply" name="supply" rows="10" cols="50"
-                                placeholder="">{{ supply }}</textarea><br>
-                        </div>
-                        <div class="demand">
-                            <label for="demand">Demand data (use space as separator):</label><br>
-                            <textarea id="demand" name="demand" rows="10" cols="50"
-                                placeholder="">{{ demand }}</textarea><br>
-                        </div>
-
                     </div>
+                    
+
                     <button class="btn" style="text-align: center;">Submit</button>
             </form>
         </div>
