@@ -2,7 +2,7 @@
 
 ## Overview
 
-This repository contains an implementation of the North-West (NW) Rule, Minimum Cost (MinCost) Rule, and UV Rule for solving transportation problems. These rules are essential techniques used in optimizing transportation and logistics operations.
+This repository contains an implementation of the North-West (NW) Rule, Minimum Cost (MinCost) Rule, and UV Rule for solving transportation problems. These rules are essential techniques used in optimizing transportation and logistics operations
 
 ## Features
 
